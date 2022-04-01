@@ -13,6 +13,13 @@ angular.module('appModule')
         controller: 'homeController',
         controllerAs: 'homePageVm',
       })
+      // .state({
+      //   name: 'app',
+      //   url: '/',
+      //   template: '<v-employees-list></v-employees-list>',
+      //   // controller: 'homeController',
+      //   // controllerAs: 'homePageVm',
+      // })
       .state({
         name: 'team-performance',
         url: '/team-performance',

@@ -9,6 +9,7 @@
   </div>
   <div
     class="c-users-list__body"
+    ng-model="test"
     ng-repeat="employee in EmployeesListComponentVm.employeesList track by $index">
     <div>
       <div class="c-users-list__main-info">
@@ -17,7 +18,7 @@
       </div>
     </div>
     <div> {{ employee.email }} </div>
-    <div> {{ employee.profile.address }} </div>
+    <div> {{ employee.profile.address | highlight:test }} </div>
     <div> {{ employee.start_date | date }} </div>
     <div> {{ employee.performance_index }} </div>
     <div> {{ employee.profile.about }} </div>

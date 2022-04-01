@@ -1,6 +1,10 @@
 <div class="c-dashboard">
   <div class="c-filters__container">
     [Place search component here]
+    <!-- <input ng-model="userInput" /> Uppercased: {{userInput | uppercase}} -->
+    <v-employees-list v-model="inputVal"/>
+    <!-- <input v-model="userInput" /> Uppercased: {{userInput | uppercase}} -->
+    
   </div>
 
   <employees-list employees-list="homePageVm.employees"></employees-list>
