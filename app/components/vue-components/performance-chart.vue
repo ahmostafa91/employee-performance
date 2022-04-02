@@ -1,7 +1,7 @@
 <template>
-  <div class="c-chart__container">
-    <v-chart ref="chart" :option="chartOptions" />
-  </div>
+    <div class="c-chart__container">
+      <v-chart ref="chart" :option="chartOptions" />
+    </div>
 </template>
 
 <script>
@@ -16,6 +16,7 @@ import {
   VisualMapComponent,
 } from "echarts/components";
 import VChart from "vue-echarts";
+import { mapGetters } from 'vuex'
 
 use([
   CanvasRenderer,
@@ -35,40 +36,44 @@ export default {
 
   data() {
     return {
-      chartData: [
-        {
-          date_ms: 1641772800000,
-          performance: 0.2,
-        },
-        {
-          date_ms: 1641859200000,
-          performance: 0.33,
-        },
-        {
-          date_ms: 1641945600000,
-          performance: 0.53,
-        },
-        {
-          date_ms: 1642032000000,
-          performance: 0.31,
-        },
-        {
-          date_ms: 1642118400000,
-          performance: 0.65,
-        },
-        {
-          date_ms: 1642204800000,
-          performance: 0.88,
-        },
-        {
-          date_ms: 1642291200000,
-          performance: 0.07,
-        },
-      ],
+      chartData: [],
     };
+  },
+  watch: {
+    performanceData(val) {
+      this.chartData = val
+    },
+    dateOptions(val) {
+      if(val.startDate && val.endDate) {
+        const start = new Date(val.startDate);
+        const end = new Date(val.endDate);
+
+        /// check if end after start
+        if(start - end < 0) {
+          let selectedData = [];
+          this.chartData.forEach(obj => {
+            console.log('date_ms',obj.date_ms)
+            if(obj.date_ms >= new Date(start).getTime() && obj.date_ms <= new Date(end).getTime()) {
+              selectedData.push(obj);
+            }
+          })
+
+          this.chartData = selectedData
+        }
+
+      }
+    }
   },
 
   computed: {
+    ...mapGetters({
+    dateOptions: 'getterDateOptions',
+    performanceData: 'getterPerformance'
+    }),
+    // performance() {
+    //   this.chartData =  this.$store.state.preformance.performance
+    //   return this.$store.state.preformance.performance
+    // },
     initOptions() {
       return {
         width: "auto",
@@ -131,11 +136,15 @@ export default {
     },
 
     xAxisData() {
+      // let data = this.$store.state.preformance.performance
       return this.chartData.map((item) => this.formatDate(item.date_ms));
+      // return data.map((item) => this.formatDate(item.date_ms));
     },
 
     yAxisData() {
+      // let data = this.$store.state.preformance.performance
       return this.chartData.map((item) => +item.performance * 100);
+      // return data.map((item) => +item.performance * 100);
     },
   },
 
@@ -144,5 +153,12 @@ export default {
       return moment(dateInMs).format("DD MMM YYYY");
     },
   },
+
+  mounted() {
+    this.chartData =  this.$store.state.preformance.performance
+  },
+  created() {
+    this.$store.dispatch('getPerformance')
+  }
 };
 </script>

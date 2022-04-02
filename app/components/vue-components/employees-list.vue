@@ -6,10 +6,6 @@
 </template>
 
 <script>
-/**
- * (possible exports: NavigationFailureType, RouterLink, RouterView, START_LOCATION, createMemoryHistory, createRouter, createRouterMatcher, createWebHashHistory, createWebHistory, isNavigationFailure, matchedRouteKey, onBeforeRouteLeave, onBeforeRouteUpdate, parseQuery, routeLocationKey, routerKey, routerViewLocationKey, stringifyQuery, useLink, useRoute, useRouter, viewDepthKey)
- */
-
 
 export default {
   name: "EmployeesListComponent",
@@ -25,9 +21,10 @@ data() {
   },
     watch: {
     inputVal(val) {
-      this.inputted = `Inputted: ${val}`;
-      var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?filter=' + val;
-      window.history.pushState({path:newurl},'',newurl);
+      if (history.pushState) {
+        const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?filter=' + val;
+        window.history.pushState({path:newurl},'',newurl);
+      }
     }
   }
 };
