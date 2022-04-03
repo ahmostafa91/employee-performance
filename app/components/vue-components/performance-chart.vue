@@ -52,7 +52,6 @@ export default {
         if(start - end < 0) {
           let selectedData = [];
           this.chartData.forEach(obj => {
-            console.log('date_ms',obj.date_ms)
             if(obj.date_ms >= new Date(start).getTime() && obj.date_ms <= new Date(end).getTime()) {
               selectedData.push(obj);
             }
@@ -70,10 +69,6 @@ export default {
     dateOptions: 'getterDateOptions',
     performanceData: 'getterPerformance'
     }),
-    // performance() {
-    //   this.chartData =  this.$store.state.preformance.performance
-    //   return this.$store.state.preformance.performance
-    // },
     initOptions() {
       return {
         width: "auto",
@@ -83,6 +78,27 @@ export default {
 
     chartOptions() {
       return {
+        visualMap: {
+          top: 50,
+          right: 0,
+          pieces: [
+            {
+              gt: 0,
+              lte: 50,
+              color: 'red'
+            },
+            {
+              gt: 50,
+              lte: 80,
+              color: 'yellow'
+            },
+            {
+              gt: 80,
+              lte: 100,
+              color: 'green'
+            }
+          ]
+        },
         title: {
           text: "Team Performance Index",
           left: "center",
@@ -122,6 +138,7 @@ export default {
         },
         series: [
           {
+            name: 'team preformance',
             data: this.yAxisData,
             type: "line",
             symbol: "circle",
@@ -136,15 +153,11 @@ export default {
     },
 
     xAxisData() {
-      // let data = this.$store.state.preformance.performance
       return this.chartData.map((item) => this.formatDate(item.date_ms));
-      // return data.map((item) => this.formatDate(item.date_ms));
     },
 
     yAxisData() {
-      // let data = this.$store.state.preformance.performance
       return this.chartData.map((item) => +item.performance * 100);
-      // return data.map((item) => +item.performance * 100);
     },
   },
 

@@ -28,19 +28,14 @@ export default {
   },
   watch: {
     startD(val) {
-      console.log('startD',val)
       this.$store.dispatch('getStartDate', val)
     },
     endD(val) {
-      console.log('endD',val)
       this.$store.dispatch('getEndDate', val)
     }, 
   },
   computed: {
 
   },
-  mounted() {
-    console.log(this.$store.state.performance)
-  }
 };
 </script>
