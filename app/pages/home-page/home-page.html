@@ -10,8 +10,8 @@
   <employees-list employees-list="homePageVm.employees"></employees-list>
 
   <div class="c-dashboard__footer">
-    <button class="c-button">
-      Load More
+    <button class="c-button" ng-click="loadMore()" ng-disabled="isLoading">
+      {{isLoading && pages >= currentPage ? 'Loading' : currentPage > pages ? 'List End' : 'Load More'}}
     </button>
   </div>
 </div>

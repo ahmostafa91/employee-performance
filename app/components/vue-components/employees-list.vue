@@ -22,7 +22,7 @@ data() {
     watch: {
     inputVal(val) {
       if (history.pushState) {
-        const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?filter=' + val;
+        const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?filter=' + (val ? val : '');
         window.history.pushState({path:newurl},'',newurl);
       }
     }
