@@ -2,13 +2,20 @@ import Vue from 'vue';
 import 'ngVue';
 import 'ngVue/build/plugins.js';
 import PerformancePageComponent from './pages/performance-page.vue';
+import EmployeesListComponent from './components/vue-components/employees-list.vue';
 import PerformanceChartComponent from './components/vue-components/performance-chart.vue';
+import store from './store/index';
 
 angular.module('appModule', [
   'ui.router',
   'ngVue',
   'ngVue.plugins',
-]);
+])
+  .config(($ngVueProvider) => {
+    $ngVueProvider.setRootVueInstanceProps({
+      store: store,
+    });
+  });
 
 angular.module('appModule').directive('vPerformancePage', (createVueComponent) => {
   return createVueComponent(Vue.component('performancePageComponent', PerformancePageComponent));
@@ -16,4 +23,8 @@ angular.module('appModule').directive('vPerformancePage', (createVueComponent) =
 
 angular.module('appModule').directive('vPerformanceChart', (createVueComponent) => {
   return createVueComponent(Vue.component('performanceChartComponent', PerformanceChartComponent));
+});
+
+angular.module('appModule').directive('vEmployeesList', (createVueComponent) => {
+  return createVueComponent(Vue.component('employeesListComponent', EmployeesListComponent));
 });

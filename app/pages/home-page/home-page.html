@@ -1,13 +1,17 @@
 <div class="c-dashboard">
   <div class="c-filters__container">
     [Place search component here]
+    <!-- <input ng-model="userInput" /> Uppercased: {{userInput | uppercase}} -->
+    <v-employees-list v-model="inputVal"/>
+    <!-- <input v-model="userInput" /> Uppercased: {{userInput | uppercase}} -->
+    
   </div>
 
   <employees-list employees-list="homePageVm.employees"></employees-list>
 
   <div class="c-dashboard__footer">
-    <button class="c-button">
-      Load More
+    <button class="c-button" ng-click="loadMore()" ng-disabled="isLoading">
+      {{isLoading && pages >= currentPage ? 'Loading' : currentPage > pages ? 'List End' : 'Load More'}}
     </button>
   </div>
 </div>

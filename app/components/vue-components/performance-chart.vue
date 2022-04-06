@@ -1,7 +1,7 @@
 <template>
-  <div class="c-chart__container">
-    <v-chart ref="chart" :option="chartOptions" />
-  </div>
+    <div class="c-chart__container">
+      <v-chart ref="chart" :option="chartOptions" />
+    </div>
 </template>
 
 <script>
@@ -16,6 +16,7 @@ import {
   VisualMapComponent,
 } from "echarts/components";
 import VChart from "vue-echarts";
+import { mapGetters } from 'vuex'
 
 use([
   CanvasRenderer,
@@ -35,40 +36,39 @@ export default {
 
   data() {
     return {
-      chartData: [
-        {
-          date_ms: 1641772800000,
-          performance: 0.2,
-        },
-        {
-          date_ms: 1641859200000,
-          performance: 0.33,
-        },
-        {
-          date_ms: 1641945600000,
-          performance: 0.53,
-        },
-        {
-          date_ms: 1642032000000,
-          performance: 0.31,
-        },
-        {
-          date_ms: 1642118400000,
-          performance: 0.65,
-        },
-        {
-          date_ms: 1642204800000,
-          performance: 0.88,
-        },
-        {
-          date_ms: 1642291200000,
-          performance: 0.07,
-        },
-      ],
+      chartData: [],
     };
+  },
+  watch: {
+    performanceData(val) {
+      this.chartData = val
+    },
+    dateOptions(val) {
+      if(val.startDate && val.endDate) {
+        const start = new Date(val.startDate);
+        const end = new Date(val.endDate);
+
+        /// check if end after start
+        if(start - end < 0) {
+          let selectedData = [];
+          this.chartData.forEach(obj => {
+            if(obj.date_ms >= new Date(start).getTime() && obj.date_ms <= new Date(end).getTime()) {
+              selectedData.push(obj);
+            }
+          })
+
+          this.chartData = selectedData
+        }
+
+      }
+    }
   },
 
   computed: {
+    ...mapGetters({
+    dateOptions: 'getterDateOptions',
+    performanceData: 'getterPerformance'
+    }),
     initOptions() {
       return {
         width: "auto",
@@ -78,6 +78,27 @@ export default {
 
     chartOptions() {
       return {
+        visualMap: {
+          top: 50,
+          right: 0,
+          pieces: [
+            {
+              gt: 0,
+              lte: 50,
+              color: 'red'
+            },
+            {
+              gt: 50,
+              lte: 80,
+              color: 'yellow'
+            },
+            {
+              gt: 80,
+              lte: 100,
+              color: 'green'
+            }
+          ]
+        },
         title: {
           text: "Team Performance Index",
           left: "center",
@@ -117,6 +138,7 @@ export default {
         },
         series: [
           {
+            name: 'team preformance',
             data: this.yAxisData,
             type: "line",
             symbol: "circle",
@@ -144,5 +166,12 @@ export default {
       return moment(dateInMs).format("DD MMM YYYY");
     },
   },
+
+  mounted() {
+    this.chartData =  this.$store.state.preformance.performance
+  },
+  created() {
+    this.$store.dispatch('getPerformance')
+  }
 };
 </script>
